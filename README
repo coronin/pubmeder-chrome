@@ -1,1 +1,26 @@
 3-30-2011
+
+"PubMed-er : ease your paper reading in browser"
+
+NOTE: When install, you will receive the message "This extension will have access to your browsing history and private data on all websites" because the extension uses a content script (http://goo.gl/59WQ), which is why you receive that message. This extension does NOT access to your private data!
+
+In Current Version: 
+ - recording is working (except inside Gmail, Cell Press Future Article Interface, or any other webpage using AJAX to fetch data)
+ - EntrezAJAX powered eFetch (jQuery, json), eUtils powered eSummary (jQuery, XML)
+
+Feature Log:
+ - v0.15, much improved local client browsing experience
+ - v1, improved speed
+ - v1.2, enable PMID list upload to app enginee http://pubmeder.appspot.com/ with automatic abstract/author/title/year fill
+ - v1.3, enable apikey validation system, visit http://pubmeder.appspot.com/registration/ for your apikey
+ - v1.4, automatically upload to pubmeder.appspot.com; need set email and apikey for enter into user specific data set
+ - v1.41, link out of PDB files to jolecule.appspot.com
+ - v1.42, option page popup (if no apikey saved)
+ - v1.43, fix several bugs, add option to set sync interval (every 12 items by default)
+
+The goal of this extension is to record all the literature you read in chrome, and upload to an app engine powered website http://pubmeder.appspot.com for future retrieve. I have also developed add-on/extension/script for other modern browsers. You can get them from http://en.dogeno.us/pubmeder .
+
+Visit http://pubmeder.appspot.com/ and look for more goodies. Enjoy PubMed-er!
+
+
+Update: PubMed-er has been integrated with "the Paper Link" at http://www.thepaperlink.com, as the tool to bookmark recent read papers.
