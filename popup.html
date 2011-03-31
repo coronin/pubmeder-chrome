@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <title>popup for PubMed-er</title>
+  <style type="text/css">
+  <!--
+    body {width:320px;overflow-x:hidden;font:11pt Helvetica,Arial,'Lucida Grande','Lucida Sans Unicode',sans-serif;}
+    td,th {font-size:8pt;text-align:left;}
+    #result {width:300px;background:#ddd;}
+    #found a {text-decoration:underline;}
+    .item {background:#ddd;}
+    .item a {text-decoration:none;color:#999;}
+    .grey {color:#ccc;}
+    .eSum {font-size:0.85em;}
+    .eSum #pmid {font-size:0.75em;text-decoration:none;color:#000;}
+    .moreAbout {font-size:0.8em;}
+    .moreAbout a {text-decoration:none;color:#666;}
+    .Off {display:none;}
+  -->
+  </style>
+  <script type="text/javascript" src="jquery142.js"></script>
+  <script type="text/javascript" src="functions.js"></script>
+</head>
+<body>
+  <p><input id="ess" type="text" value="Search PubMed" onkeydown="if (event.keyCode == 13) eSS(ess.value)" />
+  <script type="text/javascript">
+  <!--
+    clearOnClick("ess");
+  //-->
+  </script>
+  <button onclick="clearPopup()">Clear</button></p>
+
+  <div id="result" class="Off">
+    loading <img class="loadIcon" src="loading.gif" alt="..." />
+  </div>
+
+  <hr/>
+  <script type="text/javascript">
+  <!--
+    var currID = localStorage.getItem("current");
+    if (currID == undefined) {
+      currID = "18775315";
+    }
+
+    var abstractOp = localStorage.getItem("abstractOp");
+    if (abstractOp == "Yes") {
+      $("#result").removeClass("Off");
+      eSS(currID);
+    } else {
+      document.write('<p id="found"><a href="https://chrome.google.com/extensions/detail/dijkmjebgnlpkfnmbkllaggphmnplnoj" target="_blank">PubMed-er</a> found <a onclick="eSS(\''+currID+'\')">'+currID+'</a>');
+    }
+
+    eSearch(currID);
+  //-->
+  </script>
+    
+  <div id="record-table" class="Off">
+    loading <img class="loadIcon" src="loading.gif" alt="..." />
+  </div>
+
+  <script type="text/javascript">
+  <!--
+    showALL("10");
+  //-->
+  </script>
+
+</body>
+</html>

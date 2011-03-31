@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>background for PubMed-er</title>
+    <script type="text/javascript" src="jquery142.js"></script>
+    <script type="text/javascript" src="functions.js"></script>
+    <script type="text/javascript">
+    <!--
+      function onReq(request, sender, sendResponse) {
+        var d = new Date();
+        var curr_year = d.getFullYear();
+        var curr_month = d.getMonth();
+        curr_month++;
+        var curr_date = d.getDate();
+        var curr_hour = d.getHours();
+        var curr_min = d.getMinutes();
+        var curr_sec = d.getSeconds();
+        if (curr_month < 10) { curr_month = "0" + curr_month; }
+        if (curr_date < 10) { curr_date = "0" + curr_date; }
+        if (curr_hour < 10) { curr_hour = "0" + curr_hour; }
+        if (curr_min < 10) { curr_min = "0" + curr_min; }
+        if (curr_sec < 10) { curr_sec = "0" + curr_sec; }
+        var curr_Time = "10000000" + curr_year + curr_month + curr_date + curr_hour + curr_min + curr_sec;
+
+        var gotID = request.sendID;
+        localStorage.setItem("current", gotID);
+        localStorage.setItem(gotID, curr_Time);
+
+        var dotCheck = /\./;
+        var pmcCheck = /PMC/;
+        if (dotCheck.test(gotID) || pmcCheck.test(gotID)) {
+          eSearch(gotID);
+        }
+
+        var syncOp = localStorage.getItem("syncOp");
+        if (syncOp != "No") {    
+          justPMIDlist();
+          var a = localStorage.getItem("JUST_pmidList");
+          var sendInterval = localStorage.getItem("sendInterval");
+          sendInterval = parseInt(sendInterval,10);
+          if (sendInterval == "NaN") {
+            sendInterval = 12;
+          }
+          if ((a !== null) && (a.split(',').length > sendInterval)) {
+            justSendList();
+          }
+        }
+
+        chrome.pageAction.show(sender.tab.id);
+        sendResponse({});
+      }
+
+      chrome.extension.onRequest.addListener(onReq);
+
+      if (localStorage.getItem("apikeyOp") === null) {
+        chrome.tabs.create({ url: chrome.extension.getURL("/options.html") });
+      }
+    //-->
+    </script>
+  </head>
+  <body> </body>
+</html>

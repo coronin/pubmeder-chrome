@@ -1,0 +1,5 @@
+pdf file opened in browser cannot be extracted, check my python code "pyRenamePdf - pyPdfRename.py" http://en.dogeno.us/2010/02/release-a-python-script-for-organizing-scientific-papers-pyrenamepdf-py/
+
+NOTE
+
+* http://jsbin.com/ivezi3/8/edit

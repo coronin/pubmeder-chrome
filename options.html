@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <title>Options for PubMed-er</title>
+  <style type="text/css">
+  <!--
+    body {font-family:Helvetica,Arial,'Lucida Grande','Lucida Sans Unicode',sans-serif;}
+    h4 {margin:0;padding:0;}
+    p {margin: 0 0 0 2em;padding: 0.2em 0;}
+    td,th {font-size:0.75em;text-align:left;}
+    #result {width:400px;padding:10px;position:fixed;right:100px;top:32px;background:#ddd;}
+    .item {background:#ddd;}
+    .item a {text-decoration:none;color:#999;}
+    .grey {color:#ccc;}
+    .eSum {font-size:0.85em;}
+    .eSum #pmid {font-size:0.75em;text-decoration:none;color:#000;}
+    .moreAbout {font-size:0.8em;}
+    .moreAbout a {text-decoration:none;color:#666;}
+    .Off {display:none;}
+    .apiNote {font-size:0.85em;}
+    #uploaded_Records:before {content:"Id already uploaded ";}
+  -->
+  </style>
+  <script type="text/javascript" src="jquery142.js"></script>
+  <script type="text/javascript" src="functions.js"></script>
+</head>
+
+<body>
+
+  <h1>PubMed-er <span style="font-size:0.5em;">"ease your paper reading in browser"</span></h1>
+
+  <p>
+    <button onclick="PMIDarray()">send recent ones now</button> (click this will wipe the option page)
+  </p>
+
+  <p>
+    <button id="showALL" onclick="showALL()">show recent browsing records (un-uploaded)</button>
+    <button id="hideALL" onclick="hideALL()" class="Off">hide the history</button>
+    <br/><button id="showOld" onclick="showOld()">show uploaded browsing records (old)</button>
+  </p>
+
+  <div id="result" class="Off">
+    loading <img class="loadIcon" src="loading.gif" alt="..." />
+  </div>
+  <div id="record-table" class="Off">
+    loading <img class="loadIcon" src="loading.gif" alt="..." />
+  </div>
+
+  <hr/>
+  <h4>options for this extension</h4>
+
+  <p>
+    <button onclick="saveOptions()">Save Options</button>
+    <button onclick="eraseOptions()">Restore Default</button>
+  </p>
+
+  <p>1. Back up the reading history to <a target="_blank" href="http://pubmeder.appspot.com">the google server</a>, under the following user : <br/>
+  &nbsp;&nbsp;&nbsp;&nbsp;<input type="text" value="email" id="email" /> email saved <span class="apiNote">value:<span style="color:red">
+    <script type="text/javascript">
+    <!--
+      document.write(localStorage.getItem("emailOp"));
+    //-->
+    </script>
+  </span></span><br/>
+  &nbsp;&nbsp;&nbsp;&nbsp;<input type="text" value="abcdefgh" id="apikey" /> apikey saved <span class="apiNote">value:<span style="color:red">
+    <script type="text/javascript">
+    <!--
+      document.write(localStorage.getItem("apikeyOp"));
+    //-->
+    </script>
+    </span></span><br/>
+    <span class="apiNote" style="background-color:#ff9;"><i>Note: get the apikey from <a target="_blank" href="http://pubmeder.appspot.com/registration">http://pubmeder.appspot.com/registration</a></i></span></p>
+
+  <p>2 .Display the summary on the fly : <br/>
+  &nbsp;&nbsp;&nbsp;&nbsp;<select id="abstract">
+    <option value="No">No</option>
+    <option value="Yes">Yes</option>
+  </select>
+  </p>
+
+  <p>3. Automatically sync with <a target="_blank" href="http://pubmeder.appspot.com">the google server</a> (every <input type="text" value="13" size="2" id="sendInterval" /> articles) : <br/>
+  &nbsp;&nbsp;&nbsp;&nbsp;<select id="syncAuto">
+    <option value="Yes">Yes</option>
+    <option value="No">No</option>
+  </select>
+  </p>
+
+  <hr/>
+  <h4>debug (tools you might want to try or not to try :-p)</h4>
+
+  <p><span id="uploaded_Records">&nbsp;</span>
+    <button onclick="oldlistSent()">re-send</button>
+    <img class="Off" id ="reSendOnline" src="loading.gif" alt="..." />
+  </p>
+
+  <p>
+    <button onclick="savelistquick()">send to pubmeder</button> <img class="Off" id ="sendOnline" src="loading.gif" alt="..." />
+    <input type="text" size="60" id="localPMID" />
+    <br/><button onclick="clearPMIDarray()">clear the list above</button>
+  </p>
+
+  <p>
+  <button onclick="eraseNewData()">wipe recent/un-uploaded records</button><br/>
+  <button onclick="eraseAll()">wipe all records and options stored for this pubmeder extension</button><br/>
+  Enter PMID and get eSummary 
+  <input id="esummary" type="text" value="18775315,17456547,17350576,16027158" onkeydown="if (event.keyCode == 13) eSummary(esummary.value);" /><br/>
+    Enter search term and get eSummary
+  <input id="ess" type="text" value="coronin" onkeydown="if (event.keyCode == 13) eSS(ess.value);" /><br/>
+  </p>
+
+<script type="text/javascript">
+<!--
+  $(document).ready(function() {
+    loadOptions();
+    clearOnClick('email');
+    clearOnClick('apikey');
+    $("#email").val(localStorage.getItem("emailOp"));
+    $("#apikey").val(localStorage.getItem("apikeyOp"));
+    if (localStorage.getItem("apikeyOp")) {
+      $(".apiNote").addClass("Off");
+    }
+    $("#localPMID").val(localStorage.getItem("localPMID"));
+    $("#uploaded_Records").html('<input type="text" value="'+localStorage.getItem("uploadedIdList")+'" size="60" />');
+  });
+//-->
+</script>
+</body>
+</html>

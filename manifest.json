@@ -1,0 +1,33 @@
+{
+  "name" : "PubMed-er",
+  "version" : "1.44",
+  "description" : "Record the biomedical articles you read in browser (by Liang Cai, for Google Chrome)",
+  "page_action" :
+  {
+    "default_icon" : "pubmeder-19.png",
+    "default_title" : "got one article",
+    "default_popup" : "popup.html"
+  },
+  "background_page" : "background.html",
+  "options_page" : "options.html",
+  "permissions": [
+    "http://eutils.ncbi.nlm.nih.gov/",
+    "http://entrezajax2.appspot.com/",
+    "http://pubmeder.appspot.com/"
+  ],
+  "icons" : {
+    "48" : "pubmeder-48.png",
+    "128" : "pubmeder-128.png"
+  },
+  "content_scripts" : [
+    {
+      "matches" : [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js" : ["contentscript.js"],
+      "run_at" : "document_idle",
+      "all_frames" : true
+    }
+  ]
+}
