@@ -143,18 +143,25 @@ function hideMore() {
 
 
 function loadOptions() {
-  var abstractOp = localStorage.getItem("abstractOp");
   // valid abstractOp are No and Yes, default No
+  var abstractOp = localStorage.getItem("abstractOp");
   if (abstractOp === undefined || (abstractOp != "No" && abstractOp != "Yes")) {
     abstractOp = "No";
   }
   $("#abstract").val(abstractOp);
-  var syncOp = localStorage.getItem("syncOp");
   // valid syncOp are No and Yes, default Yes
+  var syncOp = localStorage.getItem("syncOp");
   if (syncOp === undefined || (syncOp != "No" && syncOp != "Yes")) {
     syncOp = "Yes";
   }
   $("#syncAuto").val(syncOp);
+  // valid rev_proxy are No and Yes, default No
+  var rev_proxy = localStorage.getItem("rev_proxy");
+  if (rev_proxy === undefined || (rev_proxy != "No" && rev_proxy != "Yes")) {
+    rev_proxy = "No";
+  }
+  $("#rev_proxy").val(rev_proxy);
+  //
   var sendInterval = localStorage.getItem("sendInterval");
   sendInterval = parseInt(sendInterval,10);
   if (sendInterval === undefined || sendInterval == "NaN") {
@@ -167,6 +174,7 @@ function loadOptions() {
 function saveOptions() {
   localStorage.setItem("abstractOp", $("#abstract").val());
   localStorage.setItem("syncOp", $("#syncAuto").val());
+  localStorage.setItem("rev_proxy", $("#rev_proxy").val());
   localStorage.setItem("sendInterval", $("#sendInterval").val());
   var userEmail = $("#email").val();
   var userApi = $("#apikey").val();
@@ -178,7 +186,7 @@ function saveOptions() {
     $("#email").focus();
   }
   if (userApi.length == 32) {
-    var checkurl = 'http://pubmeder.appspot.com/input?pmid=999999999&apikey='+userApi+'&email='+userEmail;
+    var checkurl = 'http://1.pl4.me/input?pmid=999999999&apikey='+userApi+'&email='+userEmail;
     $.ajax({
       async: false,
       type: "GET",
@@ -188,12 +196,12 @@ function saveOptions() {
         if (txt == 'correct') {
           localStorage.setItem("apikeyOp", userApi);
         } else {
-          alert("Please provide a valid apikey. Get it by visiting http://pubmeder.appspot.com/registration");
+          alert("Please provide a valid apikey. Get it by visiting http://1.pl4.me/registration");
         }
       }
     });
   } else {
-    alert("Please provide a valid apikey. Get it by visiting http://pubmeder.appspot.com/registration");
+    alert("Please provide a valid apikey. Get it by visiting http://1.pl4.me/registration");
   }
   location.reload();
 }
@@ -214,10 +222,15 @@ function eFetch(pmid) {
   $(".eSum").addClass("Off");
   $("#"+pmid).removeClass("Off");
   $(document).ready(function() {
-    args = {'apikey' : 'ab25c21c079653919d9b53213ac8cc6e',
-            'db' : 'pubmed',
-            'id' : pmid};
-    $.getJSON('http://entrezajax2.appspot.com/efetch?callback=?', args, function(d){
+    var args = {'apikey' : 'ab25c21c079653919d9b53213ac8cc6e',
+                    'db' : 'pubmed',
+                    'id' : pmid},
+      url = 'http://entrezajax2.appspot.com/efetch?callback=?',
+      rev_proxy = localStorage.getItem("rev_proxy");
+    if (rev_proxy && rev_proxy === "Yes") {
+      url = 'http://4.pl4.me/efetch?callback=?';
+    }
+    $.getJSON(url, args, function(d){
       $(".AbsButton").addClass("Off");
       $(".loadIcon").addClass("Off");
       $.each(d.result, function(i, l){
@@ -431,7 +444,7 @@ function PMIDarray() {
   var dotCheck = /\./;
   var pmcCheck = /PMC/;
   var TimePattern = /10000000\d{14}/;
-  var html = '<i>output, this is for <a href="http://pubmeder.appspot.com">http://pubmeder.appspot.com</a></i><br/><br/><button onclick="savePMIDlist()">send the list below to the server</button><br/><br/><span id="pmidlist" onclick="getAllPMID()"></span>';
+  var html = '<i>output, this is for http://pubmeder.appspot.com</i><br/><br/><button onclick="savePMIDlist()">send the list below to the server</button><br/><br/><span id="pmidlist" onclick="getAllPMID()"></span>';
   $("body").html(html);
   for (var i = (localStorage.length - 1); i >= 0 ; i--) {
     var tempKey = localStorage.key(i);
@@ -467,8 +480,8 @@ function PMIDarray() {
 
 function savePMIDlist() {
   // alert($("#pmidlist").text());
-  var aa = $("#pmidlist").text();
-  var aaLen = aa.length;
+  var aa = $("#pmidlist").text(),
+    aaLen = aa.length;
   if (aaLen> 1900) {
     alert('too many items: please submit them at http://pubmeder.appspot.com/enter (login will give you option to batch input). '+aa);
     return;
@@ -477,7 +490,11 @@ function savePMIDlist() {
   localStorage.setItem("localPMID", aa);
   // send to the pubmeder.appspot.com
   // an example http://localhost:8080/input?pmid=18775315,17456547,17350576,16027158&apikey=abcdefgh&email=test@example.com
-  var urlurl = 'http://pubmeder.appspot.com/input?pmid='+aa+'&apikey='+localStorage.getItem("apikeyOp")+'&email='+localStorage.getItem("emailOp");
+  var urlurl = 'http://pubmeder.appspot.com/input?pmid='+aa+'&apikey='+localStorage.getItem("apikeyOp")+'&email='+localStorage.getItem("emailOp"),
+    rev_proxy = localStorage.getItem("rev_proxy");
+  if (rev_proxy && rev_proxy === "Yes") {
+    urlurl = 'http://1.pl4.me/input?pmid='+aa+'&apikey='+localStorage.getItem("apikeyOp")+'&email='+localStorage.getItem("emailOp");
+  }
   // alert('send this: '+urlurl);
   alert('When the server successfully respond, this page will change, which may take 10-50 seconds.');
   $.ajax({
@@ -503,7 +520,11 @@ function savelistquick() {
     alert('too many items: please submit them at http://pubmeder.appspot.com/enter (login will give you option to batch input). '+a);
     return;
   }
-  var url = 'http://pubmeder.appspot.com/input?pmid='+a+'&apikey='+localStorage.getItem("apikeyOp")+'&email='+localStorage.getItem("emailOp");
+  var url = 'http://pubmeder.appspot.com/input?pmid='+a+'&apikey='+localStorage.getItem("apikeyOp")+'&email='+localStorage.getItem("emailOp"),
+    rev_proxy = localStorage.getItem("rev_proxy");
+  if (rev_proxy && rev_proxy === "Yes") {
+    url = 'http://1.pl4.me/input?pmid='+a+'&apikey='+localStorage.getItem("apikeyOp")+'&email='+localStorage.getItem("emailOp");
+  }
   // alert(url);
   $("#sendOnline").removeClass("Off");
   alert('When the server successfully respond, this page will change, which may take 10-50 seconds.');
@@ -553,7 +574,11 @@ function justSendList() {
     alert('too many items: please submit them at http://pubmeder.appspot.com/enter (login will give you option to batch input). '+a);
     return;
   }
-  var url = 'http://pubmeder.appspot.com/input?pmid='+a+'&apikey='+localStorage.getItem("apikeyOp")+'&email='+localStorage.getItem("emailOp");
+  var url = 'http://pubmeder.appspot.com/input?pmid='+a+'&apikey='+localStorage.getItem("apikeyOp")+'&email='+localStorage.getItem("emailOp"),
+    rev_proxy = localStorage.getItem("rev_proxy");
+  if (rev_proxy && rev_proxy === "Yes") {
+    url = 'http://1.pl4.me/input?pmid='+a+'&apikey='+localStorage.getItem("apikeyOp")+'&email='+localStorage.getItem("emailOp");
+  }
   $.ajax({
     type: "GET",
     url: url,
@@ -601,7 +626,11 @@ function oldlistSent() {
     return;
   }
   localStorage.setItem("uploadedIdList", IdList);
-  var url = 'http://pubmeder.appspot.com/input?pmid='+IdList+'&apikey='+localStorage.getItem("apikeyOp")+'&email='+localStorage.getItem("emailOp");
+  var url = 'http://pubmeder.appspot.com/input?pmid='+IdList+'&apikey='+localStorage.getItem("apikeyOp")+'&email='+localStorage.getItem("emailOp"),
+    rev_proxy = localStorage.getItem("rev_proxy");
+  if (rev_proxy && rev_proxy === "Yes") {
+    url = 'http://1.pl4.me/input?pmid='+IdList+'&apikey='+localStorage.getItem("apikeyOp")+'&email='+localStorage.getItem("emailOp");
+  }
   // alert(url);
   $("#reSendOnline").removeClass("Off");
   alert('When the server successfully respond, this page will change, which may take 10-50 seconds.');
